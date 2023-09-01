@@ -49,18 +49,18 @@ public class BinarySearchTree implements Tree{
 		
 		// contains가 만약 Node를 리턴하는 메소드라면 더 효율적이지 않나?
 		if(contains(value)) {
+			if(root.val == value) {
+				root = null;
+				return new Node(value, null, null);
+			}
 			return remove(root, value);
 		}
 		return null;
 	}
 	
 	private Node remove(Node node, int value) {
-		if(node.val == value) {
-			node = null;
-			return new Node(value, null, null);
-		}
 		
-		else if(node.val > value) {
+		if(node.val > value) {
 			
 			if(node.left.val == value) {
 				

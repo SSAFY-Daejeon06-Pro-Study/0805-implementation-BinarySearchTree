@@ -19,12 +19,8 @@ public class TreeTest {
 		
 		bst.add(1000);
 		
-		bst.remove(4);
-		
-		bst.print();
-		
-		
-		makeNull(bst.root.left.left);
+		bst.remove(1);
+		bst.remove(0);
 		
 		bst.print();
 		
