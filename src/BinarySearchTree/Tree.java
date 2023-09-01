@@ -1,4 +1,4 @@
-package src.BinarySearchTree;
+package 자료구조.BinarySearchTree;
 
 /**
  *
