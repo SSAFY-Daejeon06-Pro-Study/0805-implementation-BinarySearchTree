@@ -48,29 +48,68 @@ public class BinarySearchTree implements Tree{
 		}
 		
 		// contains가 만약 Node를 리턴하는 메소드라면 더 효율적이지 않나?
-		if(contains(value)) return remove(root, value);
+		if(contains(value)) {
+			return remove(root, value);
+		}
 		return null;
 	}
 	
 	private Node remove(Node node, int value) {
-		
 		if(node.val == value) {
-			size--;
-			if(node.left == null && node.right == null) {
-				node = null;
-			}
-			else if(node.left == null) node = node.right;
-			else if(node.right == null) node = node.left;
-			else node = InorderPredecessor(node.left);
-			
-			// 이때 기존 left, right node들 가지고 나가야하나?
+			node = null;
 			return new Node(value, null, null);
 		}
-		else if(node.val > value) 
-			return remove(node.left, value);
-		else 
-			return remove(node.right, value);	
-
+		
+		else if(node.val > value) {
+			
+			if(node.left.val == value) {
+				
+				if(node.left.left == null && node.left.right == null) {
+					node.left = null;
+				}
+				else if(node.left.left == null) {
+					node.left = node.left.right;
+				}
+				else if(node.left.right == null) {
+					node.left = node.left.left;
+				}
+				else {
+					// 삭제하려는 노드의 자식 노드가 양쪽 다 있을 떄
+					Node temp = InorderPredecessor(node.left.left);
+					temp.right = node.left.right;
+					node.left = temp;
+				}
+				
+			} else {
+				return remove(node.left, value);
+			}
+			
+		} 
+		else {
+				if(node.right.val == value) {
+				
+				if(node.right.left == null && node.right.right == null) {
+					node.right = null;
+				}
+				else if(node.right.left == null) {
+					node.right = node.right.right;
+				}
+				else if(node.right.right == null) {
+					node.right = node.right.left;
+				}
+				else {
+					Node temp = InorderPredecessor(node.right.left);
+					temp.right = node.right.right;
+					node.right = temp;
+				}
+				
+			} else {
+				return remove(node.right, value);
+			}
+		}
+		
+		return new Node(value, null, null);
+		
 	}
 	
 	private Node InorderPredecessor(Node node) {

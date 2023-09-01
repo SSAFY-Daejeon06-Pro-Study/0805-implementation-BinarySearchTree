@@ -19,8 +19,7 @@ public class TreeTest {
 		
 		bst.add(1000);
 		
-		// 여기서 null이 안되는 이유 모르겠음
-		bst.remove(0);
+		bst.remove(4);
 		
 		bst.print();
 		
