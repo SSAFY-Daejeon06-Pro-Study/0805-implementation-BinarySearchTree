@@ -20,7 +20,7 @@ public interface Tree {
      * @return {@code true} 만약 트리에 지정 요소가 포함되지 않아 정상적으로 추가되었을 경우,
      *         else, {@code false}
      */
-    boolean add(int value);
+    void add(int value);
 
     /**
      * 지정된 요소가 트리에 있는 경우 해당 요소를 삭제합니다.
