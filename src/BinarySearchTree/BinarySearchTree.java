@@ -48,7 +48,7 @@ public class BinarySearchTree implements Tree {
 
         // 삭제할 노드와 그 부모를 찾는다.
         Node removeNode = root;
-        Node parentRemoveNode = null;
+        Node parentRemoveNode = root;
         while (removeNode != null && removeNode.data != value){
             parentRemoveNode = removeNode;
 
@@ -63,9 +63,10 @@ public class BinarySearchTree implements Tree {
         if(removeNode == null) return null;
 
         // 단일 노드만을 가지고 있으면서 root를 삭제할 때
-        if(parentRemoveNode == null){
+        if(size == 1){
             Node tmp = new Node(root.data);
             clear();
+            size--;
             return tmp;
         }
 
@@ -111,13 +112,25 @@ public class BinarySearchTree implements Tree {
             removeNode.data = minNodeRightSubTree.data;
             minNodeRightSubTree.data = tmp;
 
+            parentRemoveNode = preMinNodeRightSubTree;
+
             // 3.1 오른쪽 서브트리의 최소가 그 부모의 왼쪽에 있을 때
             // 실제로 삭제할 노드는 "최소"이기 때문에 오른쪽 값만을 가지고 있거나 가지지 않음
-            if(preMinNodeRightSubTree.left != null && preMinNodeRightSubTree.left == minNodeRightSubTree){
-                preMinNodeRightSubTree.left = minNodeRightSubTree.right;
+            if(parentRemoveNode.left == minNodeRightSubTree){
+                parentRemoveNode.left = minNodeRightSubTree.right;
             }else{
-                preMinNodeRightSubTree.right = minNodeRightSubTree.right;
+                parentRemoveNode.right = minNodeRightSubTree.right;
             }
+
+            /*
+             chat-gpt에게 오류를 찾아달라고 하기 전
+             if(preMinNodeRightSubTree.left != null && preMinNodeRightSubTree.left == minNodeRightSubTree){
+                preMinNodeRightSubTree.left = minNodeRightSubTree.right;
+             }else{
+                preMinNodeRightSubTree.right = minNodeRightSubTree.right;
+             }
+            *
+            * */
 
             removeNode = minNodeRightSubTree;
         }
