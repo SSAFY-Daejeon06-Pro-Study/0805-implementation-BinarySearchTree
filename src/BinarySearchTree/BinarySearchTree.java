@@ -4,144 +4,143 @@ import java.util.Stack;
 
 public class BinarySearchTree implements Tree {
 
-    private Node root;
+    Node root;
     int size;
 
     @Override
     public boolean add(int value) {
-        if (root == null) { // 루트 생성
+        if(root == null){
             root = new Node(value);
             size++;
             return true;
         }
 
-        if (addNode(root, value)) { // 노드 삽입
+        Node tmp = root;
+        while (tmp != null){
+            if(tmp.data > value){ // 작으면 -> 왼쪽
+                if(tmp.left == null){
+                    tmp.left = new Node(value);
+                    break;
+                }
+                tmp = tmp.left;
+
+            }else if(tmp.data < value){ // 크면 -> 오른쪽
+                if(tmp.right == null){
+                    tmp.right = new Node(value);
+                    break;
+                }
+                tmp = tmp.right;
+
+            }else{ // 중복된 것을 삽입하려 할 때
+                tmp = null;
+            }
+        }
+
+        if(tmp != null){
             size++;
             return true;
         }
-
         return false;
-    }
-
-    private boolean addNode(Node node, int value) {
-        boolean result = true;
-
-        if (node.data > value) { // 작을 경우 -> 왼쪽
-            if (node.left == null) {
-                node.left = new Node(value);
-            } else {
-                result = addNode(node.left, value);
-            }
-
-        } else if (node.data < value) { // 클 경우 -> 오른쪽
-            if (node.right == null) {
-                node.right = new Node(value);
-            } else {
-                result = addNode(node.right, value);
-            }
-
-        } else {
-            return false;
-        }
-
-        return result;
     }
 
     @Override
     public Node remove(int value) {
+
+        // 삭제할 노드와 그 부모를 찾는다.
         Node removeNode = root;
         Node parentRemoveNode = null;
-
-        if(root == null) return null;
-
-        while (removeNode.data != value){
+        while (removeNode != null && removeNode.data != value){
             parentRemoveNode = removeNode;
 
             if(removeNode.data > value){
                 removeNode = removeNode.left;
-            }else if(removeNode.data < value){
-                removeNode = removeNode.right;
             }else{
-                break;
+                removeNode = removeNode.right;
             }
-
-            if(removeNode == null) break;;
         }
 
-        // 찾지 못함
-        if (removeNode == null) return null;
+        // 삭제할 노드를 찾지 못하는 경우
+        if(removeNode == null) return null;
 
-        // 1. 자식 노드가 없는 경우 -> 부모에서 링크 삭제
+        // 단일 노드만을 가지고 있으면서 root를 삭제할 때
+        if(parentRemoveNode == null){
+            Node tmp = new Node(root.data);
+            clear();
+            return tmp;
+        }
+
+        // 삭제할 노드를 찾은 경우
+        // 1. 삭제할 노드가 단말 노드일 때
         if(removeNode.left == null && removeNode.right == null){
-            if(parentRemoveNode.left != null && parentRemoveNode.left == removeNode){
+            if(parentRemoveNode.left != null && parentRemoveNode.left == removeNode){ // 부모의 왼쪽 자식일 때
                 parentRemoveNode.left = null;
-            }else if(parentRemoveNode.right != null && parentRemoveNode.right == removeNode){
+            }else{
                 parentRemoveNode.right = null;
             }
         }
 
-        // 2-1. 왼쪽 자식 노드만 있는 경우
-        else if(removeNode.right == null){
-            parentRemoveNode.left = removeNode.left;
-        }
-
-        // 2-2. 오른쪽 자식 노드만 있는 경우
-        else if(removeNode.left == null){
-            parentRemoveNode.right = removeNode.right;
-        }
-
-        // 3. 자식 노드가 두 개 있는 경우
-        else {
-            Node minRightSubTree = removeNode.right;
-            Node parentMinRightSubTree = removeNode;
-            while (minRightSubTree.left != null){ // 오른쪽 서브트리에서 최솟값 찾기
-                parentMinRightSubTree = minRightSubTree;
-                minRightSubTree = minRightSubTree.left;
-            }
-
-            int tmp = removeNode.data;
-            removeNode.data = minRightSubTree.data; // 값 교체
-            minRightSubTree.data = tmp;
-
-            if(parentMinRightSubTree.left == minRightSubTree){
-                // 오른쪽 값이 있을 수 있기 때문에, 4가 부모이고 2가 최소이고 3이 존재할 때. 4가 3을 가리키게 함. 없으면 null을 가리킬 것임
-                parentMinRightSubTree.left = minRightSubTree.right;
+        // 2-1. 왼쪽 자식 노드만 가지고 있을 때
+        else if (removeNode.right == null) {
+            if(parentRemoveNode.left != null && parentRemoveNode.left == removeNode){ // 부모의 왼쪽 자식일 때
+                parentRemoveNode.left = removeNode.left;
             }else{
-                parentMinRightSubTree.right = minRightSubTree.right;
+                parentRemoveNode.right = removeNode.left;
             }
-
-            removeNode = minRightSubTree;
         }
 
+        // 2-2. 오른쪽 자식 노드만 가지고 있을 때
+        else if(removeNode.left == null){
+            if(parentRemoveNode.left != null && parentRemoveNode.left == removeNode){ // 부모의 왼쪽 자식일 때
+                parentRemoveNode.left = removeNode.right;
+            }else{
+                parentRemoveNode.right = removeNode.right;
+            }
+        }
+
+        // 3. 왼, 오른쪽 노드를 둘 다 가지고 있을 때
+        else{
+            Node minNodeRightSubTree = removeNode.right;
+            Node preMinNodeRightSubTree = removeNode;
+            while (minNodeRightSubTree.left != null){
+                preMinNodeRightSubTree = minNodeRightSubTree;
+
+                minNodeRightSubTree = minNodeRightSubTree.left;
+            }
+
+            int tmp = removeNode.data; // 값 교환
+            removeNode.data = minNodeRightSubTree.data;
+            minNodeRightSubTree.data = tmp;
+
+            // 3.1 오른쪽 서브트리의 최소가 그 부모의 왼쪽에 있을 때
+            // 실제로 삭제할 노드는 "최소"이기 때문에 오른쪽 값만을 가지고 있거나 가지지 않음
+            if(preMinNodeRightSubTree.left != null && preMinNodeRightSubTree.left == minNodeRightSubTree){
+                preMinNodeRightSubTree.left = minNodeRightSubTree.right;
+            }else{
+                preMinNodeRightSubTree.right = minNodeRightSubTree.right;
+            }
+
+            removeNode = minNodeRightSubTree;
+        }
 
         size--;
         return removeNode;
     }
 
-
-
     @Override
     public boolean contains(int value) {
-        return find(root, value) != null;
-    }
-
-    private Node find(Node node, int value) {
-        Node find = node;
-        if (node.data > value) {
-            if (node.left != null) {
-                find = find(node.left, value);
+        Node tmp = root;
+        while (tmp !=null){
+            if(tmp.data > value){
+                tmp = tmp.left;
+            }else if(tmp.data < value){
+                tmp = tmp.right;
+            }else{
+                return true;
             }
-
-        } else if (node.data < value) {
-            if (node.right != null) {
-                find = find(node.right, value);
-            }
-
-        } else {
-            return find;
         }
-        return find;
+        return false;
     }
+
 
     @Override
     public boolean isEmpty() {

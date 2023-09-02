@@ -10,6 +10,14 @@ public class Main {
         tree.add(5);
         tree.print();
 
+        System.out.println("[remove] 노드 5(root) 삭제");
+        tree.remove(5);
+        tree.print();
+
+        System.out.println("[add] 노드 5 삽입");
+        tree.add(5);
+        tree.print();
+
         System.out.println("[add] 노드 2 삽입");
         tree.add(2);
         tree.print();
@@ -29,6 +37,10 @@ public class Main {
         System.out.println("[add] 노드 6 삽입");
         tree.add(6);
         tree.print();
+
+        System.out.println("[add] 노드 6 삽입 - 중복 삽입");
+        System.out.println("\"" + tree.add(6) + "\"\n");
+        tree.add(6);
 
         System.out.println("[size] 트리 노드 개수");
         System.out.println("\"" + tree.size() + "개\"\n");
