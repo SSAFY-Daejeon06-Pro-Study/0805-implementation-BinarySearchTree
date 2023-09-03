@@ -5,5 +5,11 @@ package src.BinarySearchTree;
  * Node 클래스도 알아서 구현
  */
 public class Node {
+    int value;
+    Node parent;
+    Node lChild, rChild;
 
+    public Node(int value) {
+        this.value = value;
+    }
 }
