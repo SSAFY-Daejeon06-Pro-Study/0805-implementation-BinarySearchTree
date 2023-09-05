@@ -1,4 +1,3 @@
-package 자료구조.BinarySearchTree;
 
 /**
  * inner class로 두어도 상관 없음

@@ -1,4 +1,3 @@
-package 자료구조.BinarySearchTree;
 
 public class TreeTest {
 	
@@ -20,8 +19,12 @@ public class TreeTest {
 		bst.add(1000);
 		
 		bst.remove(1);
-		bst.remove(0);
-		
+		bst.remove(9);
+		bst.remove(8);
+		bst.remove(5);
+		bst.remove(4);
+		System.out.println(bst.root.val);
+		bst.remove(6);
 		bst.print();
 		
 	}

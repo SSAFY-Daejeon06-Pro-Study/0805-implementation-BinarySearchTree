@@ -1,4 +1,4 @@
-package 자료구조.BinarySearchTree;
+import java.util.Stack;
 
 public class BinarySearchTree implements Tree{
 
@@ -50,7 +50,12 @@ public class BinarySearchTree implements Tree{
 		// contains가 만약 Node를 리턴하는 메소드라면 더 효율적이지 않나?
 		if(contains(value)) {
 			if(root.val == value) {
-				root = null;
+				System.out.println("!");
+				Node temp = InorderPredecessor(root.left
+						);
+				temp.left = root.left;
+				temp.right = root.right;
+				root = temp;
 				return new Node(value, null, null);
 			}
 			return remove(root, value);
@@ -114,10 +119,16 @@ public class BinarySearchTree implements Tree{
 	
 	private Node InorderPredecessor(Node node) {
 		// 해당 노드의 서브트리중 가장 큰 요소를 가진 노드를 반환하는 메소드
-		if(node.right == null) 
+		if(node.right == null) {
 			return node;
+		}
+		else if(node.right.right == null) {
+			Node temp = node.right;
+			node.right = null;
+			return temp;
+		}
 		else 
-			return InorderPredecessor(node);
+			return InorderPredecessor(node.right);
 		
 	}
 
@@ -162,18 +173,57 @@ public class BinarySearchTree implements Tree{
 		size = 0;
 	}
 
+//	@Override
+//	public void print() {
+//		// dfs - 전위 순회\
+//		if(size == 0) {
+//			System.out.println("트리가 비어있습니다.");
+//			return;
+//		}
+//		System.out.print("전위 순화 결과 : ");
+//		dfs(root);
+//		System.out.println();
+//	
+//	}
 	@Override
-	public void print() {
-		// dfs - 전위 순회\
-		if(size == 0) {
-			System.out.println("트리가 비어있습니다.");
-			return;
-		}
-		System.out.print("전위 순화 결과 : ");
-		dfs(root);
-		System.out.println();
-	
-	}
+    public void print() {
+        Stack<Node> globalStack = new Stack();
+        globalStack.push(root);
+        int emptyLeaf = 32;
+        boolean isRowEmpty = false;
+        System.out.println("****......................................................****");
+        while(isRowEmpty==false) {
+
+            Stack<Node> localStack = new Stack();
+            isRowEmpty = true;
+            for(int j=0; j<emptyLeaf; j++)
+                System.out.print(' ');
+            while(globalStack.isEmpty()==false) {
+                Node temp = globalStack.pop();
+                if(temp != null)
+                {
+                    System.out.print(temp.val);
+                    localStack.push(temp.left);
+                    localStack.push(temp.right);
+                    if(temp.left != null ||temp.right != null)
+                        isRowEmpty = false;
+                }
+                else
+                {
+                    System.out.print("--");
+                    localStack.push(null);
+                    localStack.push(null);
+                }
+                for(int j=0; j<emptyLeaf*2-2; j++)
+                    System.out.print(' ');
+            }
+            System.out.println();
+            emptyLeaf /= 2;
+            while(localStack.isEmpty()==false)
+                globalStack.push( localStack.pop() );
+        }
+        System.out.println("****......................................................****\n\n");
+    }
 	
 	private void dfs(Node node) {
 		if(node == null) return;
