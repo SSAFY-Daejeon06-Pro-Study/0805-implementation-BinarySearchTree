@@ -6,11 +6,11 @@ package src.BinarySearchTree;
  */
 public class Node {
     int value;
-    Node leftChild;
-    Node rightChild;
-    Node(Node leftChild, int value, Node rightChild) {
-        this.leftChild = leftChild;
+    Node left;
+    Node right;
+    Node(Node left, int value, Node right) {
+        this.left = left;
         this.value = value;
-        this.rightChild = rightChild;
+        this.right = right;
     }
 }
